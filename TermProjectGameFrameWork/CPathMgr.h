@@ -20,7 +20,7 @@ public:
 	wstring GetTexFilePath(wstring_view _wstrName)const { return m_wstrResPath + _wstrName.data(); }
 	string GetSoundFilePath(string_view _strName)const { return m_strSoundPath + _strName.data(); }
 
-	const wstring& GetTexPath()const { return m_wstrResPath ; }
+	const wstring& GetTexPath()const { return m_wstrTexPath ; }
 	const string& GetSoundPath()const { return m_strSoundPath ; }
 };
 
