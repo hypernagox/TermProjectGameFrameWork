@@ -137,8 +137,8 @@ void CResMgr::renderImg(HDC _dc, const CImage* const _pImg, Vec2 _vLT, Vec2 _vSc
 
 void CResMgr::renderImg(HDC _dc,const CImage* const _pImg, const CObject* const _pObj, Vec2 _vBitPos, Vec2 _vSlice, bool _bIsFlip)const
 {
-	static Vec2 vLtPos;
-	static Vec2 vScale;
+	Vec2 vLtPos;
+	Vec2 vScale;
 
 	if (_pObj->IsCamAffect())
 	{
@@ -197,8 +197,8 @@ void CResMgr::renderImg(HDC _dc,const CImage* const _pImg, const CObject* const 
 
 void CResMgr::renderDC(HDC _dest, HDC _src, const CObject* const _pObj, Vec2 _vBitPos, Vec2 _vSlice)const
 {
-	static Vec2 vLtPos;
-	static Vec2 vScale;
+	Vec2 vLtPos;
+	Vec2 vScale;
 
 	if (_pObj->IsCamAffect())
 	{

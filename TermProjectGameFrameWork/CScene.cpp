@@ -115,7 +115,7 @@ void CScene::render(HDC _dc)
 	{
 		Mgr(CThreadMgr)->Join_all();
 
-		std::atomic_thread_fence(std::memory_order_seq_cst);
+		//std::atomic_thread_fence(std::memory_order_seq_cst);
 
 		static const int size = (int)m_vecLayer.size();
 
@@ -159,7 +159,7 @@ void CScene::render(HDC _dc)
 			}
 		};
 
-		while (!g_particleWait.load(std::memory_order_seq_cst)) {
+		while (!g_particleWait.load(std::memory_order_acquire)) {
 
 		}
 	
@@ -173,7 +173,7 @@ void CScene::render(HDC _dc)
 
 		Mgr(CThreadMgr)->Join(THREAD::T2);
 
-		std::atomic_thread_fence(std::memory_order_seq_cst);
+		//std::atomic_thread_fence(std::memory_order_seq_cst);
 
 		Mgr(CThreadMgr)->Enqueue(THREAD::T2, TransparentBlt, m_hSceneThreadDC[THREAD::T2]
 			, 0
@@ -190,7 +190,7 @@ void CScene::render(HDC _dc)
 		Mgr(CThreadMgr)->Join(THREAD::T0);
 		Mgr(CThreadMgr)->Join(THREAD::T1);
 
-		std::atomic_thread_fence(std::memory_order_seq_cst);
+		//std::atomic_thread_fence(std::memory_order_seq_cst);
 
 		TransparentBlt(m_hSceneThreadDC[THREAD::T0]
 			, 0
@@ -206,7 +206,7 @@ void CScene::render(HDC _dc)
 
 		Mgr(CThreadMgr)->Join(THREAD::T2);
 
-		std::atomic_thread_fence(std::memory_order_seq_cst);
+		//std::atomic_thread_fence(std::memory_order_seq_cst);
 
 		TransparentBlt(m_hSceneThreadDC[THREAD::T0]
 			, 0
@@ -220,7 +220,7 @@ void CScene::render(HDC _dc)
 			, (int)vRes.y
 			, RGB(255, 0, 255));
 
-		std::atomic_thread_fence(std::memory_order_seq_cst);
+		//std::atomic_thread_fence(std::memory_order_seq_cst);
 
 
 		Mgr(CCamera)->SetNowLookAt(vRes / 2);
@@ -237,7 +237,7 @@ void CScene::render(HDC _dc)
 			, 0
 			, SRCCOPY);
 
-		std::atomic_thread_fence(std::memory_order_seq_cst);
+		//std::atomic_thread_fence(std::memory_order_seq_cst);
 
 		Mgr(CThreadMgr)->Enqueue(THREAD::T0, &CCore::MaznetaClear, Mgr(CCore), m_hSceneThreadDC[THREAD::T1], THREAD::T0);
 		Mgr(CThreadMgr)->Enqueue(THREAD::T1, &CCore::MaznetaClear, Mgr(CCore), m_hSceneThreadDC[THREAD::T2], THREAD::T1);
