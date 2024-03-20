@@ -34,7 +34,7 @@ public:
 		Node* const newHead = head->next;
 		if (newHead)
 		{
-			_target = std::move(newHead->data);
+			_target.swap(newHead->data);
 			head = newHead;
 			delete oldHead;
 			return true;
