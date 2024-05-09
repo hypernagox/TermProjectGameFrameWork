@@ -16,7 +16,7 @@ private:
 	TRTile** tile_map;
 	TRTileWall** tile_wall_map;
 
-	TRTileMapShade* tile_map_shade;
+	//TRTileMapShade* tile_map_shade;
 
 	CTileLayer* renderer;
 	CTileLayer* renderer_shade;
