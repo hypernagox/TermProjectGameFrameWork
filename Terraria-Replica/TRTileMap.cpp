@@ -21,7 +21,7 @@ TRTileMap::TRTileMap(int width, int height)
 
 	tile_map = new TRTile*[width * height];
 	tile_wall_map = new TRTileWall*[width * height];
-	tile_map_shade = new TRTileMapShade(width, height);
+	//tile_map_shade = new TRTileMapShade(width, height);
 	renderer = nullptr;
 	m_hTileMapBrush = CreateSolidBrush(0x00FF00FF);
 }
@@ -30,7 +30,7 @@ TRTileMap::~TRTileMap()
 {
 	delete[] tile_map;
 	delete[] tile_wall_map;
-	delete tile_map_shade;
+	//delete tile_map_shade;
 	DeleteObject(m_hTileMapBrush);
 }
 
@@ -88,7 +88,7 @@ void TRTileMap::OnSceneCreate(CScene* scene)
 	renderer = new CTileLayer(tile_pixel_size / 2, tile_pixel_size.x, tile_pixel_size.y);
 	renderer_shade = new CTileLayer(tile_pixel_size / 2, tile_pixel_size.x, tile_pixel_size.y);
 
-	tile_map_shade->BuildLightLevelMap(*this);
+	//tile_map_shade->BuildLightLevelMap(*this);
 	TRTileWall* tile_wall_air = Mgr(TRTileManager)->TileWallAir();
 
 	for (int x = 0; x < tile_width; ++x)
@@ -114,7 +114,7 @@ void TRTileMap::OnSceneCreate(CScene* scene)
 				int bitmask = GetTileNeighborMask(x, y);
 				tile->OnDrawElement(renderer, x, y, bitmask);
 			}
-			tile_map_shade->OnDrawElement(renderer_shade, x, y);
+			//tile_map_shade->OnDrawElement(renderer_shade, x, y);
 		}
 	}
 
@@ -172,8 +172,8 @@ void TRTileMap::UpdateTileRenderer(int x, int y)
 		}
 	}
 
-	tile_map_shade->InvalidateLightLevelMap(*this, x * 2 - 32, y * 2 - 34, x * 2 + 32, y * 2 + 34, true);
-	tile_map_shade->RedrawInvalidated(renderer_shade);
+	//tile_map_shade->InvalidateLightLevelMap(*this, x * 2 - 32, y * 2 - 34, x * 2 + 32, y * 2 + 34, true);
+	//tile_map_shade->RedrawInvalidated(renderer_shade);
 }
 
 int TRTileMap::GetTopYpos(int x) const
