@@ -11,24 +11,26 @@ std::atomic<bool> g_particleWait;
 
 CParticleMgr::CParticleMgr()
 {
-	CreateDCBITMAP(m_particeDC, m_particleBit, Mgr(CCore)->GetResolutionV());
+	while (!CreateDCBITMAP(m_particeDC, m_particleBit, Mgr(CCore)->GetResolutionV())) {
+		DeleteDCBITMAP(m_particeDC, m_particleBit);
+	}
 	g_particleDC = m_particeDC;
 	g_renderVec.reserve(1000);
-	g_particleWait.store(true);
-	g_ParticleRenderer = std::jthread{ []()noexcept {
-		while (!g_bParticleStop)
-		{
-			g_particleWait.wait(true);
-
-			static const auto c = g_renderVec.data();
-			const unsigned short n = (unsigned short)(g_renderVec.size());
-			for (unsigned short i = 0; i < n; ++i)c[i].get();
-			
-			g_particleWait.store(true);
-
-			g_renderVec.clear();
-		}
-		} };
+	//g_particleWait.store(true);
+	//g_ParticleRenderer = std::jthread{ []()noexcept {
+	//	while (!g_bParticleStop)
+	//	{
+	//		g_particleWait.wait(true);
+	//
+	//		static const auto c = g_renderVec.data();
+	//		const unsigned short n = (unsigned short)(g_renderVec.size());
+	//		for (unsigned short i = 0; i < n; ++i)c[i].get();
+	//		
+	//		g_particleWait.store(true);
+	//
+	//		g_renderVec.clear();
+	//	}
+	//	} };
 }
 
 CParticleMgr::~CParticleMgr()
@@ -79,16 +81,20 @@ void CParticleMgr::Update()noexcept
 		});*/
 	for (unsigned short i = 0; i < 1000; ++i)
 	{
+		//if (cache[i].IsActivate())
+		//{
+		//	g_renderVec.emplace_back(std::async(std::launch::deferred,[i]()noexcept {
+		//		cache[i].Render(g_particleDC);
+		//		}));
+		//}
 		if (cache[i].IsActivate())
 		{
-			g_renderVec.emplace_back(std::async(std::launch::deferred,[i]()noexcept {
-				cache[i].Render(g_particleDC);
-				}));
+			cache[i].Render(g_particleDC);
 		}
 	}
 
-	g_particleWait.store(false);
-	g_particleWait.notify_one();
+	//g_particleWait.store(false);
+	//g_particleWait.notify_one();
 
 	/*g_ParticleRenderer = std::async(std::launch::async, []()noexcept {
 		static const auto c = g_renderVec.data();

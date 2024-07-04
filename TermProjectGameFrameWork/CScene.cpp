@@ -147,7 +147,7 @@ void CScene::render(HDC _dc)
 				if (vecPtr[i]->IsDead())
 				{
 					Mgr(CEventMgr)->AddDeadObj(vecPtr[i]);
-					vecPtr[i] = std::move(m_vecObj[vecObj].back());
+					vecPtr[i].swap(m_vecObj[vecObj].back());
 					m_vecObj[vecObj].pop_back();
 				}
 				else
@@ -159,11 +159,10 @@ void CScene::render(HDC _dc)
 			}
 		};
 
-		while (!g_particleWait.load(std::memory_order_acquire)) {
-
-		}
+		//while (!g_particleWait.load(std::memory_order_acquire)) {
+		//
+		//}
 	
-
 		const auto cache = g_vecDrawCall.data();
 		const unsigned short num = (unsigned short)g_vecDrawCall.size();
 		for (unsigned short i = 0; i < num; ++i)cache[i].get();

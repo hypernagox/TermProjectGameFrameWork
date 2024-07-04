@@ -65,7 +65,7 @@ void CThreadMgr::init()
 
                 //std::atomic_thread_fence(std::memory_order_seq_cst);
 
-                m_arrDone[task.second].store(true,std::memory_order_relaxed);
+                m_arrDone[task.second].store(true,std::memory_order_release);
             }
             });
     }
@@ -101,7 +101,7 @@ void CThreadMgr::init()
 
                 //std::atomic_thread_fence(std::memory_order_seq_cst);
 
-                m_jobCount.fetch_sub(1);
+                m_jobCount.fetch_sub(1, std::memory_order_acq_rel);
             }
             });
     }
@@ -109,14 +109,14 @@ void CThreadMgr::init()
 
 void CThreadMgr::Join(const size_t _idx)const
 {
-    while (!m_arrDone[_idx].load(std::memory_order_relaxed))
+    while (!m_arrDone[_idx].load(std::memory_order_acquire))
     {
     }
 }
 
 void CThreadMgr::Join_all()const
 {
-    while (!std::all_of(m_arrDone.begin(), m_arrDone.end(), [](const auto& b)noexcept { return b.load(std::memory_order_relaxed); }))
+    while (!std::all_of(m_arrDone.begin(), m_arrDone.end(), [](const auto& b)noexcept { return b.load(std::memory_order_acquire); }))
     {
     }
 }

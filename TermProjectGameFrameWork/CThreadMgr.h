@@ -44,8 +44,8 @@ public:
 	{
 		{
 			//std::lock_guard<SpinLock> lock{ m_spinLockRender };
+			m_arrDone[_idx].store(false, std::memory_order_release);
 			m_jobQueue.emplace([fp = std::forward<Func>(fp), ...args = std::forward<Args>(args)]()mutable noexcept{std::invoke(std::forward<decltype(fp)>(fp), std::forward<Args>(args)...); }, _idx);
-			m_arrDone[_idx].store(false, std::memory_order_relaxed);
 		}
 		m_cvQRender.notify_one();
 	}
@@ -53,7 +53,7 @@ public:
 		requires std::invocable<Func, Args...>
 	void EnqueueUpdate(Func&& fp, Args&&... args)noexcept
 	{
-		m_jobCount.fetch_add(1);
+		m_jobCount.fetch_add(1,std::memory_order_acq_rel);
 		auto task = ([fp = std::forward<Func>(fp), ...args = std::forward<Args>(args)]()mutable noexcept{std::invoke(std::forward<Func>(fp), std::forward<Args>(args)...); });
 		{
 			//std::lock_guard<SpinLock> lock{ m_spinLockUpdate };
@@ -62,7 +62,7 @@ public:
 		m_cvQUpdate.notify_one();
 	}
 	void JoinUpdate()const noexcept{
-		while (m_jobCount.load()) {
+		while (m_jobCount.load(std::memory_order_acquire)) {
 
 		}
 	}

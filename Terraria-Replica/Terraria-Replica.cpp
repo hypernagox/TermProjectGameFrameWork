@@ -111,7 +111,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     Mgr(CEventMgr)->ResetTRupdate();
     UnhookWindowsHookEx(hHook);
-   
+    if (g_LoadThread.joinable())
+        g_LoadThread.join();
     return (int)msg.wParam;
 }
 
